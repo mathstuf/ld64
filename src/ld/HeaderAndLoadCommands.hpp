@@ -1425,7 +1425,9 @@ uint8_t* HeaderAndLoadCommandsAtom<A>::copyDylibLoadCommand(uint8_t* p, const ld
 		warning("cannot weak upward link.  Dropping weak for %s", dylib->installPath());
 	if ( weakLink && reExport )
 		warning("cannot weak re-export a dylib.  Dropping weak for %s", dylib->installPath());
-	if ( dylib->willBeLazyLoadedDylib() )
+	if ( dylib->forcedDynamicLookupLinked() )
+		return p;
+	else if ( dylib->willBeLazyLoadedDylib() )
 		cmd->set_cmd(LC_LAZY_LOAD_DYLIB);
 	else if ( reExport )
 		cmd->set_cmd(LC_REEXPORT_DYLIB);
